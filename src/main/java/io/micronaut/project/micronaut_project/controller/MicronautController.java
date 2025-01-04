@@ -9,11 +9,8 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.annotation.Produces;
-import io.micronaut.project.micronaut_project.dto.ProductsDTO;
-import io.micronaut.project.micronaut_project.dto.UserDTO;
 import io.micronaut.project.micronaut_project.entity.Products;
 import io.micronaut.project.micronaut_project.repository.ProductRepository;
-import io.micronaut.project.micronaut_project.service.ProductService;
 //import io.micronaut.security.annotation.Secured;
 //import io.micronaut.security.authentication.UsernamePasswordCredentials;
 //import io.micronaut.security.rules.SecurityRule;
@@ -29,7 +26,7 @@ import java.util.List;
 public class MicronautController {
 	
 	@Inject
-	ProductService productService;
+	ProductRepository productRepository;
 
 	@Post("/products")
 	@Produces(MediaType.APPLICATION_JSON) 
@@ -37,7 +34,7 @@ public class MicronautController {
 			@Body 
 			Products products
 		) {
-		return productService.saveProducts(products);
+		return productRepository.save(products);
 	}
 	
 //	@Get

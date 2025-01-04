@@ -129,8 +129,8 @@
 						</path>-->
 					</annotationProcessorPaths>
 					<compilerArgs>
-						<arg>-Amicronaut.processing.group=example.micronaut</arg>
-						<arg>-Amicronaut.processing.module=default</arg>
+						<arg>-Amicronaut.processing.group=io.micronaut.project</arg>
+						<arg>-Amicronaut.processing.module=micronaut-project</arg>
 					</compilerArgs>
 					<aotDependencies>
 						<dependency>
