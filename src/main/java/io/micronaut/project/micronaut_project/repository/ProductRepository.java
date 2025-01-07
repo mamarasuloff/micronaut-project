@@ -1,7 +1,5 @@
 package io.micronaut.project.micronaut_project.repository;
 
-import java.util.Optional;
-
 import io.micronaut.data.annotation.Repository;
 import io.micronaut.data.jpa.repository.JpaRepository;
 import io.micronaut.data.repository.CrudRepository;

@@ -30,5 +30,6 @@
     <factorypathentry kind="VARJAR" id="M2_REPO/io/micronaut/serde/micronaut-serde-api/2.12.0/micronaut-serde-api-2.12.0.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/io/micronaut/micronaut-context/4.7.1/micronaut-context-4.7.1.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="VARJAR" id="M2_REPO/io/micronaut/micronaut-json-core/4.7.1/micronaut-json-core-4.7.1.jar" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="VARJAR" id="M2_REPO/io/micronaut/security/micronaut-security-annotations/4.11.2/micronaut-security-annotations-4.11.2.jar" enabled="true" runInBatchMode="false"/>
     <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="false" runInBatchMode="false"/>
 </factorypath>
