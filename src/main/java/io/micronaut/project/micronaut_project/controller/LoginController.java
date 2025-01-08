@@ -3,7 +3,6 @@ package io.micronaut.project.micronaut_project.controller;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.async.annotation.SingleResult;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.http.*;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
@@ -20,6 +19,7 @@ import io.micronaut.security.event.LoginFailedEvent;
 import io.micronaut.security.event.LoginSuccessfulEvent;
 import io.micronaut.security.handlers.LoginHandler;
 import io.micronaut.security.rules.SecurityRule;
+import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
@@ -35,13 +35,19 @@ import reactor.core.publisher.Mono;
 @Secured(SecurityRule.IS_ANONYMOUS)
 public class LoginController<B> {
     private static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
-
-    protected final Authenticator<HttpRequest<B>> authenticator;
-    protected final LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
-    protected final ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
-    protected final ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
-    protected final HttpHostResolver httpHostResolver;
-    protected final HttpLocaleResolver httpLocaleResolver;
+    
+    @Inject
+    Authenticator<HttpRequest<B>> authenticator;
+    @Inject
+    LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler;
+    @Inject
+    ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher;
+    @Inject
+    ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher;
+    @Inject
+    HttpHostResolver httpHostResolver;
+    @Inject
+    HttpLocaleResolver httpLocaleResolver;
 
     /**
      * @param authenticator                 {@link Authenticator} collaborator
@@ -52,22 +58,8 @@ public class LoginController<B> {
      * @param httpLocaleResolver            The http locale resolver
      * @since 4.7.0
      */
-    public LoginController(
-        Authenticator<HttpRequest<B>> authenticator,
-        LoginHandler<HttpRequest<?>, MutableHttpResponse<?>> loginHandler,
-        ApplicationEventPublisher<LoginSuccessfulEvent> loginSuccessfulEventPublisher,
-        ApplicationEventPublisher<LoginFailedEvent> loginFailedEventPublisher,
-        HttpHostResolver httpHostResolver,
-        HttpLocaleResolver httpLocaleResolver
-    ) {
-        this.authenticator = authenticator;
-        this.loginHandler = loginHandler;
-        this.loginSuccessfulEventPublisher = loginSuccessfulEventPublisher;
-        this.loginFailedEventPublisher = loginFailedEventPublisher;
-        this.httpHostResolver = httpHostResolver;
-        this.httpLocaleResolver = httpLocaleResolver;
-    }
 
+    
     /**
      * @param usernamePasswordCredentials An instance of {@link UsernamePasswordCredentials} in the body payload
      * @param request                     The {@link HttpRequest} being executed
@@ -76,7 +68,12 @@ public class LoginController<B> {
     @Consumes({MediaType.APPLICATION_FORM_URLENCODED, MediaType.APPLICATION_JSON})
     @Post
     @SingleResult
-    public Publisher<MutableHttpResponse<?>> login(@Valid @Body UsernamePasswordCredentials usernamePasswordCredentials, HttpRequest<B> request) {
+    public Publisher<MutableHttpResponse<?>> login(
+    		@Valid 
+    		@Body
+    		UsernamePasswordCredentials usernamePasswordCredentials, 
+    		HttpRequest<B> request
+    	) {
         return Flux.from(authenticator.authenticate(request, usernamePasswordCredentials))
             .map(authenticationResponse -> {
                 if (authenticationResponse.isAuthenticated() && authenticationResponse.getAuthentication().isPresent()) {
