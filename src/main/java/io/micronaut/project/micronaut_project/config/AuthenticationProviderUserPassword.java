@@ -18,6 +18,8 @@ class AuthenticationProviderUserPassword<T> implements HttpRequestAuthentication
 	@Inject
 	UserRepository userRepository;
 	
+	PasswordEncryptionAndDecryptionService passwordEncryptionAndDecryptionService = new PasswordEncryptionAndDecryptionService();
+	
     UserRoles userRoles;
 	
 	@Override
@@ -27,10 +29,11 @@ class AuthenticationProviderUserPassword<T> implements HttpRequestAuthentication
 			@NonNull 
 			AuthenticationRequest<String, String> authenticationRequest
 		) {
-		String username = userRepository.findByUsernameAndPassword(authenticationRequest.getIdentity(), authenticationRequest.getSecret()).getUsername();
-		String password = userRepository.findByUsernameAndPassword(authenticationRequest.getIdentity(), authenticationRequest.getSecret()).getPassword();
+		String encryptedPassword = passwordEncryptionAndDecryptionService.encrypt(authenticationRequest.getSecret());
+		String username = userRepository.findByUsernameAndPassword(authenticationRequest.getIdentity(), encryptedPassword).getUsername();
+		String password = userRepository.findByUsernameAndPassword(authenticationRequest.getIdentity(), encryptedPassword).getPassword();
 		return authenticationRequest.getIdentity().equals(username)
-				&& authenticationRequest.getSecret().equals(password)
+				&& authenticationRequest.getSecret().equals(passwordEncryptionAndDecryptionService.decrypt(password))
 						? AuthenticationResponse.success(username)
 						: AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
 	}
