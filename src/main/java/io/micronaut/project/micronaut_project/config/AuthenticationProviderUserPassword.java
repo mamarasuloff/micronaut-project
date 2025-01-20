@@ -1,5 +1,7 @@
 package io.micronaut.project.micronaut_project.config;
 
+import java.util.Collections;
+
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpRequest;
@@ -14,7 +16,7 @@ import jakarta.inject.Singleton;
 
 @Singleton
 class AuthenticationProviderUserPassword<T> implements HttpRequestAuthenticationProvider<T> {
-
+	
 	@Inject
 	UserRepository userRepository;
 	
@@ -32,9 +34,10 @@ class AuthenticationProviderUserPassword<T> implements HttpRequestAuthentication
 		String encryptedPassword = passwordEncryptionAndDecryptionService.encrypt(authenticationRequest.getSecret());
 		String username = userRepository.findByUsernameAndPassword(authenticationRequest.getIdentity(), encryptedPassword).getUsername();
 		String password = userRepository.findByUsernameAndPassword(authenticationRequest.getIdentity(), encryptedPassword).getPassword();
+		String userrole = userRepository.findByUsernameAndPassword(authenticationRequest.getIdentity(), encryptedPassword).getUserrole();
 		return authenticationRequest.getIdentity().equals(username)
 				&& authenticationRequest.getSecret().equals(passwordEncryptionAndDecryptionService.decrypt(password))
-						? AuthenticationResponse.success(username)
+						? AuthenticationResponse.success(username, Collections.singletonList(userrole))
 						: AuthenticationResponse.failure(AuthenticationFailureReason.CREDENTIALS_DO_NOT_MATCH);
 	}
 }
